@@ -1,25 +1,8 @@
-/*
- * $Id$
- *
- * Copyright: Torex Retail Solutions GmbH
- *            Salzufer 8
- *            10587 Berlin
- *            Germany
- *
- * http://www.torex.com/
- *
- * All Rights Reserved!
- */
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * @author <a href="mailto:hagen.zahn@torex.com">hagen.zahn</a>
- * @version $Revision$ $Date$ $Author$
- */
 public class StringCalculatorTest {
 
     private StringCalculator calculator;

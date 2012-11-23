@@ -1,16 +1,3 @@
-/*
- * $Id$
- *
- * Copyright: Torex Retail Solutions GmbH
- *            Salzufer 8
- *            10587 Berlin
- *            Germany
- *
- * http://www.torex.com/
- *
- * All Rights Reserved!
- */
-
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,31 +5,26 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author <a href="mailto:hagen.zahn@torex.com">hagen.zahn</a>
- * @version $Revision$ $Date$ $Author$
- */
 public class StringCalculatorTest {
 
-  @Mock
-  PersistenceManager<Integer> persistenceManager;
-
   StringCalculator stringCalculator;
+  @Mock
+  private StringCalculatorDAO stringCalculatorDAOMock;
 
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
-    when(persistenceManager.load()).thenReturn(0);
-    stringCalculator = new StringCalculator(persistenceManager);
+    stringCalculator  = new StringCalculator(stringCalculatorDAOMock);
+    stringCalculator.reset();
   }
 
   @Test
   public void addDotSeparatedNumberString() {
-    Assert.assertEquals(5, stringCalculator.add("2.2.1"));
+    Assert.assertEquals(8, stringCalculator.add("2.2.1.3"));
   }
 
   @Test
@@ -62,30 +44,38 @@ public class StringCalculatorTest {
 
   @Test
   public void severalAddCalls() {
-    stringCalculator.add("1");
-    assertEquals(2, stringCalculator.add("1"));
+    stringCalculator.add("1.2");
+    assertEquals(10, stringCalculator.add("3.4"));
   }
 
   @Test
   public void addWithCustomSeparator() {
-    assertEquals(2, stringCalculator.add("//$\n1$1"));
+    assertEquals(7, stringCalculator.add("//$\n3$4"));
   }
 
   @Test
-  public void resetShouldGetZero() {
-    stringCalculator.add("2");
+  public void reset() {
+    stringCalculator.add("1");
     stringCalculator.reset();
     assertEquals(0, stringCalculator.add(""));
   }
 
   @Test
-  public void mustStoreResultAfterAdd() throws Exception {
-    stringCalculator.add("2.3");
-    verify(persistenceManager).store(5);
+  public void addShouldPersistResult() {
+    stringCalculator.add("1");
+    verify(stringCalculatorDAOMock).persist(1);
   }
 
   @Test
-  public void mustLoadResultInitially() throws Exception {
-    verify(persistenceManager, times(1)).load();
+  public void resetShouldPersistResult() {
+    // reset has already been called in setup
+    verify(stringCalculatorDAOMock).persist(0);
+  }
+
+  @Test
+  public void addShouldRestoreResult() {
+    when(stringCalculatorDAOMock.restore()).thenReturn(42);
+    stringCalculator = new StringCalculator(stringCalculatorDAOMock);
+    assertEquals(42,stringCalculator.add(""));
   }
 }

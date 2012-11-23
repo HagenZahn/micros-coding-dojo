@@ -1,16 +1,3 @@
-/*
- * $Id$
- *
- * Copyright: Torex Retail Solutions GmbH
- *            Salzufer 8
- *            10587 Berlin
- *            Germany
- *
- * http://www.torex.com/
- *
- * All Rights Reserved!
- */
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,10 +6,6 @@ import org.junit.rules.ExpectedException;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * @author <a href="mailto:hagen.zahn@torex.com">hagen.zahn</a>
- * @version $Revision$ $Date$ $Author$
- */
 public class StringCalculatorTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
